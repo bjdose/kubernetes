@@ -15,7 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<User> listUsers() {
+    public List<User> list() {
         return (List<User>) userRepository.findAll();
     }
     @Transactional(readOnly = true)
@@ -29,5 +29,9 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Optional<User> byEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

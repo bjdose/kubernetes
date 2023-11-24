@@ -1,13 +1,17 @@
 package org.bjsalcedo.springcloud.svc.users.api.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bjsalcedo.springcloud.svc.users.dao.entities.User;
 import org.bjsalcedo.springcloud.svc.users.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Binding;
 import java.util.List;
 
 @RestController
@@ -19,7 +23,7 @@ public class UserController {
 
     @GetMapping
     public List<User> listUsers() {
-        return userService.listUsers();
+        return userService.list();
     }
 
     @GetMapping("/{id}")
@@ -34,16 +38,31 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody User user) {
+    public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result) {
+        if (result.hasErrors()) return validate(result);
+
+        if (userService.byEmail(user.getEmail()).isPresent()) {
+            result.addError(new ObjectError("email", "Email already exists"));
+        }
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.save(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<?> update(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id) {
+        if (result.hasErrors()) return validate(result);
+        
         return userService.byId(id)
                 .map(u -> {
+                    if (!user.getEmail().equalsIgnoreCase(u.getEmail()) &&
+                            userService.byEmail(user.getEmail()).isPresent()) {
+                        result.addError(new ObjectError("email", "Email already exists"));
+                    }
+
+                    if (result.hasErrors()) return validate(result);
+
                     u.setName(user.getName());
                     u.setEmail(user.getEmail());
                     return ResponseEntity.ok(userService.save(u));
@@ -67,5 +86,11 @@ public class UserController {
                     return ResponseEntity
                             .status(HttpStatus.NOT_FOUND).build();
                 });
+    }
+
+    private static ResponseEntity<List<ObjectError>> validate(BindingResult result) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(result.getAllErrors());
     }
 }

@@ -18,6 +18,7 @@
 
     <modules>
         <module>svc-users</module>
+        <module>svc-courses</module>
     </modules>
 
     <properties>
