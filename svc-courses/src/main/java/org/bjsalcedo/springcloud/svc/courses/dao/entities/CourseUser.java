@@ -1,32 +1,22 @@
 package org.bjsalcedo.springcloud.svc.courses.dao.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
-@Table(name = "courses")
+@Table(name = "course_user")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Course {
+public class CourseUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotBlank
-    String name;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "course_id")
-    List<CourseUser> courseUsers;
-
-    @Transient
-    List<CourseUser> users;
+    @Column(name = "user_id", unique = true)
+    Long userId;
 }

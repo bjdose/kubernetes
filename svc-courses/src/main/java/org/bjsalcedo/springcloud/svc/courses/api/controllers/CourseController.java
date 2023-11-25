@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bjsalcedo.springcloud.svc.courses.dao.entities.Course;
+import org.bjsalcedo.springcloud.svc.courses.dao.models.User;
 import org.bjsalcedo.springcloud.svc.courses.services.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,29 @@ public class CourseController {
                 })
                 .orElseGet(() -> {
                     log.error("Course not found with id: {}", id);
+                    return ResponseEntity
+                            .status(HttpStatus.NOT_FOUND).build();
+                });
+    }
+
+    @PutMapping("/{courseId}/assign")
+    public ResponseEntity<?> assign(@RequestBody User user, @PathVariable Long courseId) {
+        return courseService.assign(courseId, user.getId())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    log.error("Course not found with id: {}", courseId);
+                    return ResponseEntity
+                            .status(HttpStatus.NOT_FOUND).build();
+                });
+
+    }
+
+    @PostMapping("/{courseId}/create")
+    public ResponseEntity<?> create(@RequestBody User user, @PathVariable Long courseId) {
+        return courseService.create(courseId, user)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    log.error("Course not found with id: {}", courseId);
                     return ResponseEntity
                             .status(HttpStatus.NOT_FOUND).build();
                 });
