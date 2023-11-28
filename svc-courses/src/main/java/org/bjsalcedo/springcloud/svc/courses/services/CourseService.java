@@ -28,6 +28,21 @@ public class CourseService {
     public Optional<Course> byId(Long id) {
         return courseRepository.findById(id);
     }
+
+    @Transactional(readOnly = true)
+    public Optional<Course> byIdWithUsers(Long id) {
+        Optional<Course> o = courseRepository.findById(id);
+        if (o.isPresent()) {
+            Course course = o.get();
+            if (!course.getCourseUsers().isEmpty()) {
+                List<Long> userIds = course.getCourseUsers().stream().map(CourseUser::getUserId).toList();
+                List<User> users = userClientRest.getStudentsByCourse(userIds);
+                course.setUsers(users);
+            }
+                return Optional.of(course);
+        }
+        return Optional.empty();
+    }
     @Transactional
     public Course save(Course user) {
         return courseRepository.save(user);
@@ -81,5 +96,4 @@ public class CourseService {
         courseRepository.save(course);
         return removed;
     }
-
 }

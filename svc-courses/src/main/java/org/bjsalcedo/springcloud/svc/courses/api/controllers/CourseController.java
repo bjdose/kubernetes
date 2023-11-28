@@ -28,7 +28,7 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detail(@PathVariable Long id) {
-        return courseService.byId(id)
+        return courseService.byIdWithUsers(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.error("Course not found with id: {}", id);
@@ -91,6 +91,17 @@ public class CourseController {
     @PostMapping("/{courseId}/create")
     public ResponseEntity<?> create(@RequestBody User user, @PathVariable Long courseId) {
         return courseService.create(courseId, user)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    log.error("Course not found with id: {}", courseId);
+                    return ResponseEntity
+                            .status(HttpStatus.NOT_FOUND).build();
+                });
+    }
+
+    @DeleteMapping("/{courseId}/remove")
+    public ResponseEntity<?> remove(@RequestBody User user, @PathVariable Long courseId) {
+        return courseService.remove(courseId, user.getId())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> {
                     log.error("Course not found with id: {}", courseId);

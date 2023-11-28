@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bjsalcedo.springcloud.svc.courses.dao.models.User;
 
 import java.util.List;
 
@@ -28,5 +29,5 @@ public class Course {
     List<CourseUser> courseUsers;
 
     @Transient
-    List<CourseUser> users;
+    List<User> users;
 }

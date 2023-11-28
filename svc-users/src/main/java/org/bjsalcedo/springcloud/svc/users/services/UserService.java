@@ -18,20 +18,29 @@ public class UserService {
     public List<User> list() {
         return (List<User>) userRepository.findAll();
     }
+
     @Transactional(readOnly = true)
     public Optional<User> byId(Long id) {
         return userRepository.findById(id);
     }
+
     @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }
+
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> byEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> byIds(List<Long> ids) {
+        return (List<User>) userRepository.findAllById(ids);
     }
 }

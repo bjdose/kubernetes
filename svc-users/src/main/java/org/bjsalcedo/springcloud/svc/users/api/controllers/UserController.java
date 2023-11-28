@@ -88,6 +88,18 @@ public class UserController {
                 });
     }
 
+    @GetMapping("/courses")
+    public ResponseEntity<?> getUsersByCourseIds(@RequestParam List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return ResponseEntity.badRequest().body("Course IDs are required.");
+        }
+        List<User> users = userService.byIds(ids);
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(users);
+    }
+
     private static ResponseEntity<List<ObjectError>> validate(BindingResult result) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
