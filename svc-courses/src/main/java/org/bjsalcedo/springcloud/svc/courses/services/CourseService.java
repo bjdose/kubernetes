@@ -51,6 +51,10 @@ public class CourseService {
     public void delete(Long id) {
         courseRepository.deleteById(id);
     }
+    @Transactional
+    public void deleteCourseUserById(Long userId) {
+        courseRepository.deleteCourseUserById(userId);
+    }
 
     @Transactional
     public Optional<User> assign(Long courseId, Long userId) {

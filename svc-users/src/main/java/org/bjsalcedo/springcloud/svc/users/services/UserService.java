@@ -1,6 +1,7 @@
 package org.bjsalcedo.springcloud.svc.users.services;
 
 import lombok.RequiredArgsConstructor;
+import org.bjsalcedo.springcloud.svc.users.clients.CourseClientRest;
 import org.bjsalcedo.springcloud.svc.users.dao.entities.User;
 import org.bjsalcedo.springcloud.svc.users.dao.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final CourseClientRest courseClientRest;
 
     @Transactional(readOnly = true)
     public List<User> list() {
@@ -32,6 +34,7 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
+        courseClientRest.deleteCourseUserById(id);
     }
 
     @Transactional(readOnly = true)

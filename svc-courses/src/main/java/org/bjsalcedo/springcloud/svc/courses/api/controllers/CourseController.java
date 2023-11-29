@@ -1,5 +1,6 @@
 package org.bjsalcedo.springcloud.svc.courses.api.controllers;
 
+import feign.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +75,12 @@ public class CourseController {
                     return ResponseEntity
                             .status(HttpStatus.NOT_FOUND).build();
                 });
+    }
+
+    @DeleteMapping("/delete-user/{userId}")
+    public ResponseEntity<?> deleteCourseUserById(@PathVariable Long userId) {
+        courseService.deleteCourseUserById(userId);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{courseId}/assign")
