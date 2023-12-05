@@ -30,9 +30,7 @@ services:
 
   svc_users:
     container_name: svc_users
-    build:
-      context: ./
-      dockerfile: ./svc-users/Dockerfile
+    image: brayanjsalcedo/svc_users:latest
     ports:
       - "8001:8001"
     env_file:
@@ -45,9 +43,7 @@ services:
 
   svc_courses:
     container_name: svc_courses
-    build:
-      context: ./
-      dockerfile: ./svc-courses/Dockerfile
+    image: brayanjsalcedo/svc_courses:latest
     ports:
       - "8002:8002"
     env_file:
@@ -64,4 +60,4 @@ volumes:
   data-postgres:
     name: data-postgres
 networks:
-    spring:
+  spring:
