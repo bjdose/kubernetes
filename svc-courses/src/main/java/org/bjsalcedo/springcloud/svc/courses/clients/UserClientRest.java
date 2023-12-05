@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "svc-users", url = "localhost:8001")
+@FeignClient(name = "svc-users", url = "${USERS_SERVICE_URL:svc-users:8001}")
 public interface UserClientRest {
     @GetMapping("/api/users/{id}")
     User details(@PathVariable Long id);
