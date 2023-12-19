@@ -33,8 +33,14 @@ services:
     image: brayanjsalcedo/svc_users:latest
     ports:
       - "8001:8001"
-    env_file:
-      - ./svc-users/.env
+    environment:
+      PORT: 8001
+      DB_HOST: mysql8
+      DB_PORT: 3306
+      DB_DATABASE: svc_users
+      DB_USERNAME: root
+      DB_PASSWORD: zaza
+      COURSES_SERVICE_URL: svc-courses:8002
     networks:
       - spring
     depends_on:
@@ -46,8 +52,14 @@ services:
     image: brayanjsalcedo/svc_courses:latest
     ports:
       - "8002:8002"
-    env_file:
-      - ./svc-courses/.env
+    environment:
+      PORT: 8002
+      DB_HOST: postgres14
+      DB_PORT: 5432
+      DB_DATABASE: svc_courses
+      DB_USERNAME: postgres
+      DB_PASSWORD: zaza
+      USERS_SERVICE_URL: svc-users:8001
     networks:
       - spring
     depends_on:
